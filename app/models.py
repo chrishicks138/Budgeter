@@ -1,0 +1,49 @@
+from datetime import datetime
+from app import db
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.body)
+
+
+class Income(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    income = db.Column(db.String(64), index=True, unique=False)
+    price = db.Column(db.String(120), index=True, unique=False)
+    occurence = db.Column(db.String(128))
+    payday = db.Column(db.String(120), index=True, unique=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '{} {} {} {} {}'.format(self.id, self.income, self.price,
+                                       self.occurence, self.payday)
+
+
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    expense = db.Column(db.String(64), index=True, unique=False)
+    price = db.Column(db.String(120), index=True, unique=False)
+    occurence = db.Column(db.String(128))
+    expenseDate = db.Column(db.String(128))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '{} {} {} {} {}' .format(self.id, self.expense, self.price,
+                                    self.occurence, self.expenseDate)
