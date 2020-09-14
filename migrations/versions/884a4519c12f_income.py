@@ -1,8 +1,8 @@
-"""Expense
+"""Income
 
-Revision ID: 86ebc20325d2
+Revision ID: 884a4519c12f
 Revises: 
-Create Date: 2020-08-30 11:21:47.191336
+Create Date: 2020-09-13 13:08:12.417089
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '86ebc20325d2'
+revision = '884a4519c12f'
 down_revision = None
 branch_labels = None
 depends_on = None

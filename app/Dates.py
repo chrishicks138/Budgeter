@@ -1,5 +1,4 @@
 import datetime
-from app.models import Expense, Income
 import time
 
 x = datetime.datetime.now()
@@ -52,8 +51,6 @@ class Comprehensions():
 
 class Dates:
     def __init__(self):
-        self.expense_list = Expense.query.all()
-        self.income_list = Income.query.all()
         self.dates = [datetime.datetime.fromordinal(day).strftime("%m-%d") for day in range(datetime.datetime.toordinal(x), datetime.datetime.toordinal(x) + 365)]
 
     def span_length(self, span):
@@ -79,12 +76,8 @@ class Dates:
         return result
 
     def date_selector(self, span):
-        self.payday = [d.payday for d in self.income_list]
-        if len(self.payday) == 0:
-            self.payday = [0]
         for e, d in enumerate(self.dates):
             if today in d:
-                print(today, d, e)
                 for i in range(self.today_b(e), self.today_e(e, span)):
                     labels.add_today_label(self.dates[i])
 

@@ -54,18 +54,16 @@ class IncomeForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
-    days = date_list
-    print(days)
     payday = SelectField(
         "payday",
         choices=[
-            ("0", days[0]),
-            ("1", days[1]),
-            ("2", days[2]),
-            ("3", days[3]),
-            ("4", days[4]),
-            ("5", days[5]),
-            ("6", days[6]),
+            ("0", date_list[0]),
+            ("1", date_list[1]),
+            ("2", date_list[2]),
+            ("3", date_list[3]),
+            ("4", date_list[4]),
+            ("5", date_list[5]),
+            ("6", date_list[6]),
         ],
         validators=[DataRequired()],
     )
@@ -96,14 +94,14 @@ class ExpenseForm(FlaskForm):
     expenseDate = SelectField(
         "expenseDate",
         choices=[
-            ("0", "Sunday"),
-            ("1", "Monday"),
-            ("2", "Tuesday"),
-            ("3", "Wednesday"),
-            ("4", "Thursday"),
-            ("5", "Friday"),
-            ("6", "Saturday"),
-        ],
+            ("0", date_list[0]),
+            ("1", date_list[1]),
+            ("2", date_list[2]),
+            ("3", date_list[3]),
+            ("4", date_list[4]),
+            ("5", date_list[5]),
+            ("6", date_list[6]),
+        ]
     )
     submit = SubmitField("Add Expense")
 
