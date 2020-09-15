@@ -88,7 +88,8 @@ class ExpenseForm(FlaskForm):
         choices=[("1", "Daily"),
                  ("2", "Weekly"),
                  ("3", "Every other day"),
-                 ("4", "Biweekly")],
+                 ("4", "Biweekly"),
+                 ("5", "Monthly")],
         validators=[DataRequired()],
     )
     expenseDate = SelectField(

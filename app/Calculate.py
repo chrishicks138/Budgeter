@@ -1,5 +1,5 @@
 import app.Dates as Dates
-from app.Lists import ExpenseList, IncomeList
+from app.Lists import Comprehensions, ExpenseList
 
 
 class Date():
@@ -64,7 +64,7 @@ class Calculate:
             previous day total and subtract weekly expense
             on the week
             '''
-            price = self.prices[income]
+            price = self.prices[0][income]
             self.total = self.add_income(price)
             self.check_negative()
         if self.index not in self.paydates:
@@ -77,7 +77,7 @@ class Calculate:
             self.total = self.add_biweekly_expense()
             self.check_negative()
         self.day.add_day(self.index, round(self.total, 2),
-                         self.date[self.index], self.expense, self.prices[0])
+                         self.date[self.index], self.expense, self.prices[0][income])
 
     def recurring(self):
         income = 1
@@ -89,7 +89,6 @@ class Calculate:
 
     def enum_expenses(self):
         for self.index, self.expense in enumerate(self.dailyExpenses):
-            self.payday = False
             if self.index < self.paydates[0]:
                 self.existing()
             else:
@@ -100,12 +99,9 @@ class Calculate:
         self.biweeklyExpense = ExpenseList.biweekly[1]
         self.dailyExpenses = ExpenseList.daily[1]
         self.date = Dates.Dates().label()
-        self.paydates = args[0]
+        self.paydates = Comp.paydates(args[0])
         self.week = args[1]
-        self.prices = [
-            float(IncomeList.existing[0][2]),
-            float(IncomeList.recurring[0][2])
-        ]
+        self.prices = Comp.prices()
         self.days = []
         self.values = []
         self.labels = []
@@ -121,33 +117,5 @@ class Calculate:
             return self.day.return_data()
 
 
-class Comprehensions():
-    # List comprehensions for the labels
-    def weekly(self, start, range_end):
-        return [i for i in range(start, range_end, 7)]
 
-    def biweekly(self, start, range_end):
-        return [i for i in range(start, range_end, 14)]
-
-    def daily_span(self, range_end):
-        return [day for day in range(0, range_end)]
-
-    def other_span(self, range_end):
-        return [day for day in range(0, range_end, 2)]
-
-    def other_add(self, deduct, label_span):
-        daily = label_span[1]
-        other = label_span[0]
-        return [deduct[0] + deduct[1] for d in daily for o in other if d == o]
-
-    def no_other(self, deduct, daily):
-        return [deduct[0] for day in daily]
-
-    def daily_add(self, deduct, otherInsert):
-        return [deduct[0] for day in range(len(otherInsert))]
-
-    def deduct_list(self, occurence):
-        return [i for i in occurence]
-
-    def stacked_list(self, occurence):
-        return [i for elem in occurence for i in elem]
+Comp = Comprehensions()
