@@ -8,7 +8,6 @@ weekday = datetime.datetime.strptime(date, "%m-%d-%Y").weekday() + 1
 
 
 class Now():
-
     def start(self):
         now = time.time_ns()
         return now
@@ -46,12 +45,16 @@ labels = Labels()
 
 
 class Comprehensions():
-    d = [datetime.datetime.fromordinal(day).strftime("%m-%d") for day in range(datetime.datetime.toordinal(x), datetime.datetime.toordinal(x) + 365)]
+    d = [
+        datetime.datetime.fromordinal(day).strftime("%m-%d")
+        for day in range(datetime.datetime.toordinal(x),
+                         datetime.datetime.toordinal(x) + 365)
+    ]
 
 
 class Dates:
     def __init__(self):
-        self.dates = [datetime.datetime.fromordinal(day).strftime("%m-%d") for day in range(datetime.datetime.toordinal(x), datetime.datetime.toordinal(x) + 365)]
+        self.ordinal = datetime.datetime.toordinal(x)
 
     def span_length(self, span):
         week = 7
@@ -76,10 +79,9 @@ class Dates:
         return result
 
     def date_selector(self, span):
-        for e, d in enumerate(self.dates):
-            if today in d:
-                for i in range(self.today_b(e), self.today_e(e, span)):
-                    labels.add_today_label(self.dates[i])
-
-    def label(self):
-        return labels.label_chooser()
+        return [
+            datetime.datetime.fromordinal(day).strftime("%m-%d")
+            for day in range(
+                datetime.datetime.toordinal(x),
+                datetime.datetime.toordinal(x) + self.span_length(span))
+        ]

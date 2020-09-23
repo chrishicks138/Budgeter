@@ -56,15 +56,8 @@ class IncomeForm(FlaskForm):
     )
     payday = SelectField(
         "payday",
-        choices=[
-            ("0", date_list[0]),
-            ("1", date_list[1]),
-            ("2", date_list[2]),
-            ("3", date_list[3]),
-            ("4", date_list[4]),
-            ("5", date_list[5]),
-            ("6", date_list[6]),
-        ],
+        choices=[(str(Dates.Dates().ordinal + x), date_list[x])
+                 for x in range(365)],
         validators=[DataRequired()],
     )
     submit = SubmitField("Add Income")
@@ -85,24 +78,15 @@ class ExpenseForm(FlaskForm):
     price = StringField("price", validators=[DataRequired()])
     occurence = SelectField(
         "occurence",
-        choices=[("1", "Daily"),
-                 ("2", "Weekly"),
-                 ("3", "Every other day"),
-                 ("4", "Biweekly"),
-                 ("5", "Monthly")],
+        choices=[("1", "Daily"), ("2", "Weekly"), ("3", "Every other day"),
+                 ("4", "Biweekly"), ("5", "Monthly")],
         validators=[DataRequired()],
     )
     expenseDate = SelectField(
         "expenseDate",
-        choices=[
-            ("0", date_list[0]),
-            ("1", date_list[1]),
-            ("2", date_list[2]),
-            ("3", date_list[3]),
-            ("4", date_list[4]),
-            ("5", date_list[5]),
-            ("6", date_list[6]),
-        ]
+        choices=[(str(Dates.Dates().ordinal + x), date_list[x])
+                 for x in range(365)],
+        validators=[DataRequired()],
     )
     submit = SubmitField("Add Expense")
 
@@ -114,12 +98,10 @@ def db_commit():
 
 def form_submit(expense_form, income_form):
     if expense_form.validate_on_submit():
-        expense = Expense(
-            expense=expense_form.expense.data,
-            price=expense_form.price.data,
-            occurence=expense_form.occurence.data,
-            expenseDate=expense_form.expenseDate.data
-        )
+        expense = Expense(expense=expense_form.expense.data,
+                          price=expense_form.price.data,
+                          occurence=expense_form.occurence.data,
+                          expenseDate=expense_form.expenseDate.data)
         db.session.add(expense)
         db_commit()
 
@@ -136,7 +118,7 @@ def form_submit(expense_form, income_form):
 
 @app.route("/", methods=["GET", "POST"])
 def chart():
-    # Dates.Now().start()
+    Dates.Now().start()
     income_list = Income.query.all()
     expense_list = Expense.query.all()
     deleteIncome = deleteIncomeForm()
@@ -146,21 +128,12 @@ def chart():
     span_form = SpanForm()
     form_submit(expense_form, income_form)
     span = span_form.span.data
-    if span == "1":
-        span_label = '7'
-    if span == "2":
-        span_label = '14'
-    if span == "3":
-        span_label = '31'
-    if span == "4":
-        span_label = '90'
-    if span == "5":
-        span_label = '180'
+    span_label = str(Dates.Dates().span_length(span))
     legend = "Daily Balance"
-    dates.date_selector(span)
-    labels, values, days = Occurence.Occurence().range_calc(span)
-    # Dates.Now().end()
-    # print(Dates.Now().result())
+    labels, values = Occurence.Occurence().range_calc(span)
+    Occurence.delete()
+    Dates.Now().end()
+    print(Dates.Now().result())
     return render_template(
         "chart.html",
         span=span_form,
@@ -172,7 +145,6 @@ def chart():
         expense_form=expense_form,
         values=values,
         labels=labels,
-        days=days,
         legend=legend,
         span_label=span_label,
     )

@@ -49,10 +49,13 @@ class Lists():
             '''
             Begin with today's Dates
             '''
+            print(paydates[3])
+            print(paydates[4])
             paydates = [
-                i for i in range(int(paydates[3]),
-                                 days.span_length(span),
-                                 int(paydates[4]))
+                i
+                for i in range(int(paydates[3]),
+                               Dates.Dates().ordinal +
+                               days.span_length(span), int(paydates[4]))
             ]
             paydays.append(paydates)
         return paydays
@@ -60,14 +63,11 @@ class Lists():
     def Expense(self, range_end, span):
         daily = []
         other = []
-        ExpenseList.weekly = ("weekly",
-                              Comp.weekly(0,
-                                          days.span_length(span)),
+        ExpenseList.weekly = ("weekly", Comp.weekly(0, days.span_length(span)),
                               "0.00")
         ExpenseList.biweekly = ("biweekly",
                                 Comp.biweekly(0,
-                                              days.span_length(span)),
-                                "0.00")
+                                              days.span_length(span)), "0.00")
         for expense in self.expense_list:
             '''
             Round expense to two decimal places and
@@ -78,8 +78,8 @@ class Lists():
             if expense.occurence == "2":
                 date = int(expense.expenseDate)
                 ExpenseList.weekly = ("weekly",
-                                      Comp.weekly(date,
-                                                  days.span_length(span)),
+                                      Comp.weekly(
+                                          date, date + days.span_length(span)),
                                       expense.price)
             elif expense.occurence == "1":
                 daily.append(expense.price)
@@ -88,14 +88,16 @@ class Lists():
             elif expense.occurence == "4":
                 date = int(expense.expenseDate)
                 ExpenseList.biweekly = ("biweekly",
-                                        Comp.biweekly(date,
-                                                      days.span_length(span)),
+                                        Comp.biweekly(
+                                            date,
+                                            date + days.span_length(span)),
                                         expense.price)
             elif expense.occurence == "5":
                 date = int(expense.expenseDate)
                 ExpenseList.monthly = ("monthly",
-                                       Comp.biweekly(date,
-                                                     days.span_length(span)),
+                                       Comp.biweekly(
+                                           date,
+                                           date + days.span_length(span)),
                                        expense.price)
         '''
         Add each expense in each category and return it
@@ -147,7 +149,7 @@ class Comprehensions():
         return [args for args in paydates for args in args]
 
     def prices(self):
-        return [(existing[2], recurring[2]) for existing in IncomeList.existing
+        return [(float(existing[2]), float(recurring[2])) for existing in IncomeList.existing
                 for recurring in IncomeList.recurring]
 
 

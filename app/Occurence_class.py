@@ -13,7 +13,7 @@ class Occurence:
         rspan = [[], []]
         for i in range(len(self.deduct)):
             if self.deduct[i] != 0:
-                self.range_end = days.span_length(span)
+                self.range_end = self.days.span_length(span)
                 if i == 1:
                     rspan.insert(0, Comp.other_span(self.range_end))
                 if i == 0:
@@ -49,16 +49,21 @@ class Occurence:
         return self.dailyExpenses
 
     def range_calc(self, span):
-        self.range_end = days.span_length(span)
+        self.days = Dates.Dates()
+        self.range_end = self.days.span_length(span)
         self.deduct = List.Expense(self.range_end, span)
         weekday = Dates.weekday
         List.Income(self.range_end)
+        self.dates = Dates.Dates().date_selector(span)
+        prices = Comp.prices()[0]
         ExpenseList.daily = ("daily",
                              self.range_calc2(span),
                              self.deduct[0])
         return Calc.enum_balance(
             List.paydates(weekday, span),
-            self.deduct)
+            self.deduct,
+            prices,
+            self.dates)
 
 
 def delete():
@@ -69,4 +74,3 @@ List = Lists()
 Calc = Calculate()
 dates = Dates.Labels()
 Comp = Comprehensions()
-days = Dates.Dates()
