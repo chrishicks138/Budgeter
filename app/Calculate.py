@@ -1,5 +1,5 @@
 import app.Dates as Dates
-from app.Lists import Comprehensions, ExpenseList
+from app.Lists import Comprehensions as Comp, ExpenseList
 
 
 class Date():
@@ -9,18 +9,7 @@ class Date():
         self.values = []
 
     def add_day(self, *args):
-        self.index = args[0]
-        self.total = args[1]
-        self.day = args[2]
-        self.expense = args[3]
-        self.prices = args[4]
-        self.days.append([
-            self.index,
-            self.total,
-            self.day,
-            self.expense,
-            self.prices,
-        ])
+        self.days.append(args)
 
     def append_data(self):
         for day in self.days:
